@@ -1,28 +1,30 @@
 buildscript {
     repositories {
+        google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.android.tools.build:gradle:3.2.1'
     }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
-def eclipseProperties=new Properties()
+def eclipseProperties = new Properties()
 file('project.properties').withInputStream {
     eclipseProperties.load(it)
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 28
 
     defaultConfig {
-        targetSdkVersion eclipseProperties.getProperty('target')-'android-'
+        targetSdkVersion eclipseProperties.getProperty('target') - 'android-'
         versionCode 'git rev-list --count HEAD'.execute(null, projectDir).text.toInteger()
         versionName 'git describe --tags --always HEAD'.execute(null, projectDir).text.trim()
+        minSdkVersion 19
     }
 
     sourceSets {
@@ -32,4 +34,14 @@ android {
             res.srcDirs = ['res']
         }
     }
+
+    dependencies {
+        implementation 'com.android.support:preference-v7:' + support_version
+    }
+}
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
